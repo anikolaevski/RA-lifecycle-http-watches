@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment-timezone';
-
+import del_icon from './icons/delete_4219.png';
 import Container from './components/Container';
 import {tzdata} from './WatchData';
 
@@ -10,7 +10,7 @@ tzdata.sort((a,b) => {
   return -1;
 })
 // eslint-disable-next-line no-undef
-console.log(tzdata);
+// console.log(tzdata);
 
 const curDate = new Date();
 const format='YYYY-MM-DD HH:mm:ss';
@@ -31,13 +31,15 @@ const format='YYYY-MM-DD HH:mm:ss';
     evt.preventDefault();
     const sel = tzdata.find(o => o.tz === this.currentTZ);
     if (!sel) { return; }
-    this.timeArray.push({
-      description: this.currentTZ, 
-      moment: new moment(curDate).tz(this.currentTZ), 
-      format: format,
-      label: sel.name
-    });
-    this.setState( (prev) => ({prev, current: this.timeArray}) );
+    if (this.timeArray.findIndex(o => o.description === this.currentTZ) === -1) {
+      this.timeArray.push({
+        description: this.currentTZ, 
+        moment: new moment(curDate).tz(this.currentTZ), 
+        format: format,
+        label: sel.name
+      });
+      this.setState( (prev) => ({prev, current: this.timeArray}) );
+    }
   }
   render() {
     return (
@@ -124,8 +126,10 @@ class ShowWatch extends React.Component {
     <Container class="ShowWatch">
       <p className="MyTimeFormat">{this.state.current.format(this.props.format)}</p>
       <p>{this.props.label}</p>
-      <i className="fas fa-trash-alt del-sign" onClick={this.killWatch.bind(this)}/>
+      <img className="del-sign" src={del_icon} onClick={this.killWatch.bind(this)}/>
     </Container>
     );
   }
 }
+// 
+{/* <i className="fas fa-trash-alt del-sign" onClick={this.killWatch.bind(this)}/> */}

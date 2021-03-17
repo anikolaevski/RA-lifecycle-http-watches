@@ -2,7 +2,7 @@
   "name": "events_state_layouts",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://anikolaevski.github.io/RA-lefecycle-http-watches/",
+  "homepage": "https://anikolaevski.github.io/RA-lifecycle-http-watches/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
