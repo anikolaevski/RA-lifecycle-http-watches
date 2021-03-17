@@ -9,6 +9,7 @@ tzdata.sort((a,b) => {
   if (a.name > b.name) { return 1; }
   return -1;
 })
+// eslint-disable-next-line no-undef
 console.log(tzdata);
 
 const curDate = new Date();
