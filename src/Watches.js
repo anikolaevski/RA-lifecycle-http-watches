@@ -9,7 +9,7 @@ tzdata.sort((a,b) => {
   if (a.name > b.name) { return 1; }
   return -1;
 })
-// console.log(tzdata);
+console.log(tzdata);
 
 const curDate = new Date();
 const format='YYYY-MM-DD HH:mm:ss';
