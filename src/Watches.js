@@ -122,6 +122,7 @@ class ShowWatch extends React.Component {
   killWatch() {
     // eslint-disable-next-line no-undef
     clearInterval(this.interval);
+    this.props.killFunction(this.props.description);
   }
   componentWillUnmount() {
     this.killWatch();
