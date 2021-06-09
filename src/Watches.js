@@ -107,19 +107,24 @@ class ShowWatch extends React.Component {
   state={prev: this.props.moment, current: this.props.moment}
   constructor(props) {
     super(props);
+    this.switcher = this.switcher.bind(this);
   }
   componentDidMount() {
     // eslint-disable-next-line no-undef
-    const interval = setInterval(this.switcher.bind(this), 1000);
+    this.interval = setInterval(this.switcher.bind(this), 1000);
     const key = this.props.timeArray.findIndex( o => o.description === this.props.description);
     if (key === -1) { return; }
-    this.props.timeArray[key].interval = interval;
+    this.props.timeArray[key].interval = this.interval;
   }
   switcher() {
     this.setState( (prev) => ({prev: prev, current: new moment().tz(this.props.description)}) );
   }
   killWatch() {
-    this.props.killFunction(this.props.description);
+    // eslint-disable-next-line no-undef
+    clearInterval(this.interval);
+  }
+  componentWillUnmount() {
+    this.killWatch();
   }
   render () {
     return (
