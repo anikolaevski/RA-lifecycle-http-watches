@@ -9,8 +9,6 @@ tzdata.sort((a,b) => {
   if (a.name > b.name) { return 1; }
   return -1;
 })
-// eslint-disable-next-line no-undef
-// console.log(tzdata);
 
 const curDate = new Date();
 const format='YYYY-MM-DD HH:mm:ss';
@@ -19,27 +17,15 @@ const format='YYYY-MM-DD HH:mm:ss';
  export class General extends React.Component {
   constructor(props) {
     super(props);
-    this.timeArray = [];
-    this.currentTZ =tzdata[0].tz;
+    this.currentTZ = tzdata[0].tz;
   }
-  state = { prev: [], current: [] }
+  state = { prev: '', current: '' }
   selection(evt) {
     this.currentTZ = evt.target.value;
-    // console.log(this.currentTZ);
   }
   renew(evt) {
     evt.preventDefault();
-    const sel = tzdata.find(o => o.tz === this.currentTZ);
-    if (!sel) { return; }
-    if (this.timeArray.findIndex(o => o.description === this.currentTZ) === -1) {
-      this.timeArray.push({
-        description: this.currentTZ, 
-        moment: new moment(curDate).tz(this.currentTZ), 
-        format: format,
-        label: sel.name
-      });
-      this.setState( (prev) => ({prev, current: this.timeArray}) );
-    }
+    this.setState( (prev) => ({prev, current: this.currentTZ}) );
   }
   render() {
     return (
@@ -52,8 +38,7 @@ const format='YYYY-MM-DD HH:mm:ss';
           <button onClick={this.renew.bind(this)}>Добавить</button>
         </form>
         <div className="General">
-            {/* <Container class="FirstClass">Страница в разработке, {datestr}</Container> */}
-            <WatchGroup watches={this.timeArray} />
+            <WatchGroup watch={this.state.current} />
         </div>
       </React.Fragment>
     );    
@@ -62,12 +47,27 @@ const format='YYYY-MM-DD HH:mm:ss';
 
 class WatchGroup extends React.Component {
   static propTypes = {
-    watches: PropTypes.array.isRequired
+    watch: PropTypes.string.isRequired
   };
   constructor(props) {
     super(props);
+    this.timeArray = [];
   }
-  state={prev: this.props.watches, current: this.props.watches}
+  state={prev: [], current: []}
+
+  addFunction() {
+    const sel = tzdata.find(o => o.tz === this.props.watch);
+    if (!sel) { return; }
+    if (this.timeArray.findIndex(o => o.description === this.props.watch) !== -1) { return; }
+    this.timeArray.push({
+      description: this.props.watch,
+      moment: new moment(curDate).tz(this.props.watch), 
+      format: format,
+      label: sel.name
+    });
+    this.setState( (prev) => ({ prev: prev, current: this.timeArray }) );
+  }
+
   killfunction(killDesc) { //kill selected watch by click
     const ar = this.state.current;
     const key = ar.findIndex( o => o.description === killDesc);
@@ -78,9 +78,10 @@ class WatchGroup extends React.Component {
     this.setState( (prev) => ({ prev: prev, current: ar }) );
   }
   render () {
+    this.addFunction();
     return (
     <Container class="WatchGroup">
-      {this.props.watches.map(
+      {this.timeArray.map(
         o => <ShowWatch 
           key={o.description} 
           description={o.description} 
